@@ -1,16 +1,14 @@
 # Videogames Script for Obsidian's Quickadd plugin
 
 ## Demo
+
 ![igdbDemo](https://user-images.githubusercontent.com/52013479/150051838-f68e23c2-2a3a-43e3-a25c-d6d8f4ba6830.gif)
 
-If this script helped you and you wish to contribute :)
-
-<a href="https://www.buymeacoffee.com/elawsdev4" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
-
 ## Description
+
 This script allows you to easily insert a videogame note into your Obsidian vault using [Quickadd plugin](https://github.com/chhoumann/quickadd) by @chhoumann. **Now also works on Mobile (make sure you use latest QuickAdd) !**
 
-We use IGDB api to get the videogame information. 
+We use IGDB api to get the videogame information.
 
 This script needs a **client id** and **client secret** for IGDB API that you can get [here](https://api-docs.igdb.com/#about). Steps to obtain **client id** and **client secret** are detailed [below](#how-to-obtain-client-id-and-secret).
 
@@ -22,7 +20,7 @@ The script and this tutorial are based on [Macro_MovieAndSeriesScript.md](https:
 
 ## How to obtain client ID and secret.
 
-1. Sign-in to this website : https://dev.twitch.tv/login.
+1. Sign-in to this website : <https://dev.twitch.tv/login>.
 2. Click on "Applications" :
 
 ![1](https://user-images.githubusercontent.com/52013479/151679962-4f510da2-bdb4-49d0-82f9-baaacb7bb4f6.png)
@@ -46,6 +44,7 @@ The script and this tutorial are based on [Macro_MovieAndSeriesScript.md](https:
 7. Keep your `client id` and `client secret`, they will be needed in the steps [below](#installation).
 
 ## Installation
+
 ![igdbInstall](https://user-images.githubusercontent.com/52013479/150051891-f9330609-8521-402a-97f1-3288bb4186f3.gif)
 
 0. Make sure you use latest QuickAdd version (at least 0.5.1) !
