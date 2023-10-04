@@ -68,53 +68,58 @@ async function start(params, settings) {
 	
 	if(selectedGame.involved_companies)
 	{
-		var developer = (selectedGame.involved_companies).find(element => element.developer);
+		var developers = (selectedGame.involved_companies).filter(element => element.developer);
+		var publishers = (selectedGame.involved_companies).filter(element => element.publisher);
 	}
 
-	
-	const isPlayed = await QuickAdd.quickAddApi.yesNoPrompt("Played ?");
-	let myRating = "/10";
-	let myRecommender = " ";
-	let comment = " ";
-
-	// If game already played, add a rating to it.
-	if(isPlayed){
-		myRating = await QuickAdd.quickAddApi.inputPrompt("Rating", null, "/10");
+	const STATUS_ARR = ["todo", "done", "wip"];
+	const myStatus = await QuickAdd.quickAddApi.suggester(
+		STATUS_ARR,
+		STATUS_ARR
+	);
+	if (!myStatus) {
+		notice("No choice selected.");
+		throw new Error("No choice selected.");
 	}
-
-	myRecommender = await QuickAdd.quickAddApi.inputPrompt("Recommender", null, " ");
-	comment = await QuickAdd.quickAddApi.inputPrompt("Comment", null, " ");
 
 	QuickAdd.variables = {
 		...selectedGame,
 		fileName: replaceIllegalFileNameCharactersInString(selectedGame.name),
 		// Each genre comes in {ID, NAME} pair. Here, get rid of ID to keep NAME only.
-		// POST request to IGDB in apiGet(query) uses IGDB API's expander syntax (see : https://api-docs.igdb.com/#expander)
-		genresFormatted: `${selectedGame.genres ? formatList((selectedGame.genres).map(item => item.name)) : " "}`,
-		gameModesFormatted: `${selectedGame.game_modes ? formatList((selectedGame.game_modes).map(item => item.name)) : " "}`,
-		//Developer name and logo
-		developerName: `${developer ? developer.company.name : " "}`,
-		developerLogo: `${developer ? (developer.company.logo ? ("https:" + developer.company.logo.url).replace("thumb", "logo_med") : " ") : " "}`,
+		// POST request to IGDB in apiGet(query) uses IGDB API's expander syntax
+		// (see : https://api-docs.igdb.com/#expander)
+		genresFormatted: `${selectedGame.genres ? formatList((selectedGame.genres)
+			.map(item => item.name)) : ""}`,
+		gameModesFormatted: `${selectedGame.game_modes ? formatList((selectedGame.game_modes)
+			.map(item => item.name)) : ""}`,
+		//Developer and publisher names
+		developerName: `${developers ? formatList(developers
+			.map(developer => developer.company.name)) : ""}`,
+		publisherName: `${publishers ? formatList(publishers
+			.map(publisher => publisher.company.name)) : ""}`,
 		// For possible image size options, see : https://api-docs.igdb.com/#images
-		thumbnail: `${selectedGame.cover ? "https:" + (selectedGame.cover.url).replace("thumb", "cover_big") : " "}`,
+		thumbnail: `${selectedGame.cover ? "https:" + (selectedGame.cover.url)
+		.replace("thumb", "cover_big") : ""}`,
 		// Release date is given as UNIX timestamp.
-		release: `${selectedGame.first_release_date ? (new Date((selectedGame.first_release_date*1000))).getFullYear() : " "}`,
-		// Squares of different color to tag Obsidian's note, depending if game has already been played or not.
-		tag: `${isPlayed ? "\u{0001F7E7}" : "\u{0001F7E5}"}`,
+		release: `${selectedGame.first_release_date ?
+			(new Date((selectedGame.first_release_date*1000))).getFullYear() : ""}`,
 		// A short description of the game.
-		storylineFormatted: `${selectedGame.storyline ? (selectedGame.storyline).replace(/\r?\n|\r/g, " ") : " "}`,
-		rating: myRating,
-		played: `${isPlayed ? "1" : "0"}`,
-		// Who recommended the game ?
-		recommender: myRecommender,
-		// A short personal comment on the game.
-		comment
+		storylineFormatted: `${selectedGame.storyline ?
+			(selectedGame.storyline).replace(/\r?\n|\r/g, " ") : ""}`,
+		// Platforms
+		platformsFormatted: `${selectedGame.platforms ? formatList((selectedGame.platforms)
+			.map(item => item.name)) : ""}`,
+		platformsAbbreviation: `${selectedGame.platforms ? formatList((selectedGame.platforms)
+			.map(item => item.abbreviation)) : ""}`,
+		status: myStatus
 	};
 }
 
 function formatTitleForSuggestion(resultItem) {
 	return `${resultItem.name} (${
-	(new Date((resultItem.first_release_date)*1000)).getFullYear()
+		resultItem.platforms ? formatListWithoutQuotes((resultItem.platforms)
+		.map(item => item.name)) : ""} | ${
+		(new Date((resultItem.first_release_date)*1000)).getFullYear()
 	})`;
 }
 
@@ -141,6 +146,13 @@ function formatList(list) {
 	if (list.length === 1) return `${list[0]}`;
 
 	return list.map((item) => `\"${item.trim()}\"`).join(", ");
+}
+
+function formatListWithoutQuotes(list) {
+	if (list.length === 0 || list[0] == "N/A") return "";
+	if (list.length === 1) return `${list[0]}`;
+
+	return list.map((item) => `${item.trim()}`).join(", ");
 }
 
 function replaceIllegalFileNameCharactersInString(string) {
@@ -206,7 +218,11 @@ async function apiGet(query) {
 			// https://api-docs.igdb.com/#examples
 			// https://api-docs.igdb.com/#game
 			// https://api-docs.igdb.com/#expander
-			body: "fields name, first_release_date, involved_companies.developer, involved_companies.company.name, involved_companies.company.logo.url, url, cover.url, genres.name, game_modes.name, storyline; search \"" + query + "\"; limit 15;"
+			body: "fields name, first_release_date, involved_companies.developer, " +
+				"involved_companies.publisher, involved_companies.company.name, " +
+				"involved_companies.company.logo.url, url, cover.url, genres.name, " +
+				"game_modes.name, storyline, platforms.name, platforms.abbreviation; " +
+				"search \"" + query + "\"; limit 25;"
 		})
 		
 		return JSON.parse(res);
