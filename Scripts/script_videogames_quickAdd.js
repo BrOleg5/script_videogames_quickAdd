@@ -15,7 +15,7 @@ module.exports = {
   entry: start,
   settings: {
     name: "Videogames Script",
-    author: "Elaws",
+    author: "Elaws and BrOleg5",
     options: {
       [API_CLIENT_ID_OPTION]: {
         type: "text",
@@ -48,7 +48,7 @@ async function start(params, settings) {
 	await readAuthToken();
 
 	const query = await QuickAdd.quickAddApi.inputPrompt(
-	"Enter videogame title: "
+		"Enter videogame title: "
 	);
 	if (!query) {
 		notice("No query entered.");
@@ -83,34 +83,35 @@ async function start(params, settings) {
 	}
 
 	QuickAdd.variables = {
-		...selectedGame,
+		name: selectedGame.name,
 		fileName: replaceIllegalFileNameCharactersInString(selectedGame.name),
 		// Each genre comes in {ID, NAME} pair. Here, get rid of ID to keep NAME only.
 		// POST request to IGDB in apiGet(query) uses IGDB API's expander syntax
 		// (see : https://api-docs.igdb.com/#expander)
-		genresFormatted: `${selectedGame.genres ? formatList((selectedGame.genres)
+		genres: `${selectedGame.genres ? formatList((selectedGame.genres)
 			.map(item => item.name)) : ""}`,
-		gameModesFormatted: `${selectedGame.game_modes ? formatList((selectedGame.game_modes)
+		gameModes: `${selectedGame.game_modes ? formatList((selectedGame.game_modes)
 			.map(item => item.name)) : ""}`,
-		//Developer and publisher names
+		// Developer and publisher names
 		developerName: `${developers ? formatList(developers
 			.map(developer => developer.company.name)) : ""}`,
 		publisherName: `${publishers ? formatList(publishers
 			.map(publisher => publisher.company.name)) : ""}`,
 		// For possible image size options, see : https://api-docs.igdb.com/#images
-		thumbnail: `${selectedGame.cover ? "https:" + (selectedGame.cover.url)
-		.replace("thumb", "cover_big") : ""}`,
+		cover: `${selectedGame.cover ? "https:" + (selectedGame.cover.url)
+			.replace("thumb", "cover_big") : ""}`,
 		// Release date is given as UNIX timestamp.
 		release: `${selectedGame.first_release_date ?
 			(new Date((selectedGame.first_release_date*1000))).getFullYear() : ""}`,
 		// A short description of the game.
-		storylineFormatted: `${selectedGame.storyline ?
+		storyline: `${selectedGame.storyline ?
 			(selectedGame.storyline).replace(/\r?\n|\r/g, " ") : ""}`,
 		// Platforms
-		platformsFormatted: `${selectedGame.platforms ? formatList((selectedGame.platforms)
+		platforms: `${selectedGame.platforms ? formatList((selectedGame.platforms)
 			.map(item => item.name)) : ""}`,
-		platformsAbbreviation: `${selectedGame.platforms ? formatList((selectedGame.platforms)
+		platformAbbreviations: `${selectedGame.platforms ? formatList((selectedGame.platforms)
 			.map(item => item.abbreviation)) : ""}`,
+		url: selectedGame.url, 
 		status: myStatus
 	};
 }
