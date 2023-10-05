@@ -221,7 +221,7 @@ async function apiGet(query) {
 			// https://api-docs.igdb.com/#expander
 			body: "fields name, first_release_date, involved_companies.developer, " +
 				"involved_companies.publisher, involved_companies.company.name, " +
-				"involved_companies.company.logo.url, url, cover.url, genres.name, " +
+				"url, cover.url, genres.name, " +
 				"game_modes.name, storyline, platforms.name, platforms.abbreviation; " +
 				"search \"" + query + "\"; limit 25;"
 		})

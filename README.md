@@ -63,89 +63,22 @@ The script and this tutorial are based on [Macro_MovieAndSeriesScript.md](https:
 
 You can now use the macro to create notes with videogame information in your vault !
 
-### Example template
-
-Please also find a definition of the variables used in this template below (see : [Template variables definitions](#template-variables-definitions)).
-
-````markdown
-# {{VALUE:name}}
-
-Title:: {{VALUE:name}}
-linking:: [[% Videogames]]
-Tags:: #📥/🎮/{{VALUE:tag}}
-Developer:: {{VALUE:developerName}}
-DeveloperLogo:: {{VALUE:developerLogo}}
-Genre:: {{VALUE:genresFormatted}} 
-Modes:: {{VALUE:gameModesFormatted}}
-Thumbnail:: {{VALUE:thumbnail}}
-Release:: {{VALUE:release}}
-URL:: [IGDB]({{VALUE:url}})
-Date:: {{DATE}}
-Recommender:: {{VALUE:recommender}}
-Comment:: {{VALUE:comment}}
-Rating:: {{VALUE:rating}}
-Played:: {{VALUE:played}}
-
----
-
-# Storyline
-
-> {{VALUE:storylineFormatted}}
-
-````
-
-## Dataview rendering
-
-Here is the dataview query used in the demo (replace `PATH` by your videogames notes path) :
-
-```dataview
-TABLE WITHOUT ID
-
-("[[" + file.name + "|" + Title + "]]") AS Title,
-Date,
-Genre,
-Modes,
-("![coverImg|100](" + Thumbnail + ")") AS Cover,
-("![DeveloperLogo|100](" + DeveloperLogo + ")") AS Developer,
-Release,
-URL,
-Recommender,
-Comment,
-Rating
-
-from "PATH"
-```
-
-The banner at the top of the document is rendered using [Obsidian-banners](https://github.com/noatpad/obsidian-banners) plugin.
-
 ## Template variables definitions
 
 Please find here a definition of the possible variables to be used in your template. Simply write `{{VALUE:name}}` in your template, and replace `name` by the desired video game data, including :
 
-`fileName`: Title of the game without illegal characters. Possibly used in template configuration to name your file.
-
-`name`: The title of the game.
-
-`tag`: A colored square that is orange if game has been played, red if not.
-
-`developerName`: Name of the developer.
-
-`developerLogo`: Logo of the developer (if available).
-
-`genresFormatted`: A list of genres for this game, formatted as "genre1", "genre2", etc...
-
-`gameModesFormatted`: A list of game modes for this game, formatted as "gameMode1", "gameMode2", etc...
-
-`thumbnail`: A poster of the videogame (if available)
-
-`release`: The year the game was released (if available)
-
-`url`: URL to the IGDB page of the game.
-
-`recommender`: The person (or organization, etc...) that recommended the book to you.
-
-`comment`: A small personal comment on the videogame.
-
-`rating`: Your videogame rating, /10.
-
-`played`: If you played the game, this equals 1, otherwise 0 (this helps to filter dataview query).
+| Variable | Description |
+|:--------:|:------------|
+| `name` | The title of the game. |
+| `fileName` | Title of the game without illegal characters. Possibly used in template configuration to name your file. |
+| `developerName` | Name of the development studio. If the game was developed by several companies, then the variable contains a list of company names surrounded by quotes. |
+| `publisherName` | Name of the publisher. If the game was published by several companies, then the variable contains a list of company names surrounded by quotes. |
+| `genres` | A list of genres for this game, formatted as "genre1", "genre2" etc. |
+| `gameModes` | A list of game modes for this game, formatted as "gameMode1", "gameMode2" etc. |
+| `cover` | A poster of the videogame (if available) |
+| `release` | The year the game was released (if available) |
+| `url` | URL to the IGDB page of the game. |
+| `storyline` | A short description of a games story |
+| `platforms` | A list of platforms this game was released on, formatted as "platform1", "platform2" etc. |
+| `platformAbbreviations` | A list of platform name abbreviations from `platforms` variable. |
+| `status` | Game completion status: todo, wip (work in progress) or done. |
