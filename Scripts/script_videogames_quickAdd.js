@@ -72,7 +72,10 @@ async function start(params, settings) {
 		var publishers = (selectedGame.involved_companies).filter(element => element.publisher);
 	}
 
-	const rating_dict = processAgeRating(selectedGame.age_ratings);
+	let rating_dict = {};
+	if(selectedGame.age_ratings) {
+		rating_dict = processAgeRating(selectedGame.age_ratings);
+	}
 
 	const STATUS_ARR = ["todo", "done", "wip"];
 	const myStatus = await QuickAdd.quickAddApi.suggester(
@@ -90,37 +93,39 @@ async function start(params, settings) {
 		// Each genre comes in {ID, NAME} pair. Here, get rid of ID to keep NAME only.
 		// POST request to IGDB in apiGet(query) uses IGDB API's expander syntax
 		// (see : https://api-docs.igdb.com/#expander)
-		genres: `${selectedGame.genres ? formatList((selectedGame.genres)
-			.map(item => item.name)) : " "}`,
-		gameModes: `${selectedGame.game_modes ? formatList((selectedGame.game_modes)
-			.map(item => item.name)) : " "}`,
+		genres: selectedGame.genres ? formatList((selectedGame.genres).map(item => item.name)) : " ",
+		gameModes: selectedGame.game_modes ? formatList((selectedGame.game_modes)
+			.map(item => item.name)) : " ",
 		// Developer and publisher names
-		developerName: `${developers ? formatList(developers
-			.map(developer => developer.company.name)) : " "}`,
-		publisherName: `${publishers ? formatList(publishers
-			.map(publisher => publisher.company.name)) : " "}`,
+		developerName: developers ? formatList(developers
+			.map(developer => developer.company.name)) : " ",
+		publisherName: publishers ? formatList(publishers
+			.map(publisher => publisher.company.name)) : " ",
 		// For possible image size options, see : https://api-docs.igdb.com/#images
-		cover: `${selectedGame.cover ? "https:" + (selectedGame.cover.url)
-			.replace("thumb", "cover_big") : " "}`,
+		cover: selectedGame.cover ? "https:" + (selectedGame.cover.url)
+			.replace("thumb", "cover_big") : " ",
 		// Release date is given as UNIX timestamp.
 		release: `${selectedGame.first_release_date ?
 			(new Date((selectedGame.first_release_date*1000))).getFullYear() : " "}`,
 		// A short description of the game.
-		storyline: `${selectedGame.storyline ?
-			(selectedGame.storyline).replace(/\r?\n|\r/g, " ") : " "}`,
+		storyline: selectedGame.storyline ? (selectedGame.storyline).replace(/\r?\n|\r/g, " ") : " ",
 		// Platforms
-		platforms: `${selectedGame.platforms ? formatList((selectedGame.platforms)
-			.map(item => item.name)) : ""}`,
-		platformAbbreviations: `${selectedGame.platforms ? formatList((selectedGame.platforms)
-			.map(item => item.abbreviation)) : ""}`,
+		platforms: selectedGame.platforms ? formatList((selectedGame.platforms)
+			.map(item => item.name)) : " ",
+		platformAbbreviations: selectedGame.platforms ? formatList((selectedGame.platforms)
+			.map(item => item.abbreviation)) : " ",
 		url: selectedGame.url,
-		ESRB: `${"ESRB" in rating_dict ? rating_dict["ESRB"] : " "}`,
-		PEGI: `${"PEGI" in rating_dict ? rating_dict["PEGI"] : " "}`,
-		CERO: `${"CERO" in rating_dict ? rating_dict["CERO"] : " "}`,
-		USK: `${"USK" in rating_dict ? rating_dict["USK"] : " "}`,
-		GRAC: `${"GRAC" in rating_dict ? rating_dict["GRAC"] : " "}`,
-		CLASS_IND: `${"CLASS_IND" in rating_dict ? rating_dict["CLASS_IND"] : " "}`,
-		ACB: `${"ACB" in rating_dict ? rating_dict["ACB"] : " "}`,
+		ESRB: "ESRB" in rating_dict ? rating_dict["ESRB"] : " ",
+		PEGI: "PEGI" in rating_dict ? rating_dict["PEGI"] : " ",
+		CERO: "CERO" in rating_dict ? rating_dict["CERO"] : " ",
+		USK: "USK" in rating_dict ? rating_dict["USK"] : " ",
+		GRAC: "GRAC" in rating_dict ? rating_dict["GRAC"] : " ",
+		CLASS_IND: "CLASS_IND" in rating_dict ? rating_dict["CLASS_IND"] : " ",
+		ACB: "ACB" in rating_dict ? rating_dict["ACB"] : " ",
+		aggregatedRating: selectedGame.aggregated_rating ? 
+			selectedGame.aggregated_rating.toFixed().toString() : " ",
+		aggregatedRatingCount: selectedGame.aggregated_rating_count ?
+			selectedGame.aggregated_rating_count.toString() : " ",
 		status: myStatus
 	};
 }
@@ -230,9 +235,9 @@ async function apiGet(query) {
 			// https://api-docs.igdb.com/#expander
 			body: "fields name, first_release_date, involved_companies.developer, " +
 				"involved_companies.publisher, involved_companies.company.name, " +
-				"url, cover.url, genres.name, " +
-				"game_modes.name, storyline, platforms.name, platforms.abbreviation, " +
-				"age_ratings.category, age_ratings.rating; " + 
+				"url, cover.url, genres.name, game_modes.name, storyline, platforms.name, " +
+				"platforms.abbreviation, age_ratings.category, age_ratings.rating, " +
+				"aggregated_rating, aggregated_rating_count; " +
 				"search \"" + query + "\"; limit 25;"
 		})
 		

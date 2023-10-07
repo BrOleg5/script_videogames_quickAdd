@@ -71,6 +71,9 @@ Please find here a definition of the possible variables to be used in your templ
 | `storyline` | A short description of a games story |
 | `platforms` | A list of platforms this game was released on, formatted as "platform1", "platform2" etc. |
 | `platformAbbreviations` | A list of platform name abbreviations from `platforms` variable. |
+| `aggregatedRating` | Rating based on external critic scores |
+| `aggregatedRatingCount` | Number of external critic scores |
+| **Age ratings** ||
 | `ESRB` | Entertainment Software Rating Board rating (United States) |
 | `PEGI` | Pan-European Game Information rating (European Union) |
 | `CERO` | Computer Entertainment Rating Organization rating |
@@ -78,4 +81,5 @@ Please find here a definition of the possible variables to be used in your templ
 | `GRAC` | Game Rating and Administration Committee rating (Japan) |
 | `CLASS_IND` | Classificação Indicativa rating (Brazil) |
 | `ACB` | Australian Classification Board rating (Australia) |
+| **Custom variables** | *not from IGDB* |
 | `status` | Game completion status: todo, wip (work in progress) or done. |
