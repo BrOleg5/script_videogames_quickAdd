@@ -18,29 +18,19 @@ The script and this tutorial are based on [Macro_MovieAndSeriesScript.md](https:
 
 **Please never run a script that you don't understand. I cannot and will not be liable for any damage caused by the use of this script. Regularly make a backup of your Obsidian's vault !**
 
-## How to obtain client ID and secret.
+## How to obtain client ID and secret
 
 1. Sign-in to this website : <https://dev.twitch.tv/login>.
 2. Click on "Applications" :
-
 ![1](https://user-images.githubusercontent.com/52013479/151679962-4f510da2-bdb4-49d0-82f9-baaacb7bb4f6.png)
-
 3. Click on "Register your application" :
-
 ![2](https://user-images.githubusercontent.com/52013479/151679974-093dc027-3d17-4ba4-8225-44f6eb5a7262.png)
-
 4. In "Name", choose a name you want. In "OAuth Redirect URLs", write `http://localhost`. In "category", choose "Application Integration". Finally, click on "Create" :
-
 ![3](https://user-images.githubusercontent.com/52013479/151680007-4a96a8df-d6a2-483f-bab6-0f5454d909af.png)
-
 5. Click on manage :
-
 ![4](https://user-images.githubusercontent.com/52013479/151680012-2d453d2b-6e1a-4e1e-8feb-2c6067f9cdfd.png)
-
 6. Here are your `client id` and `client secret` ! To generate `client secret`, click on `new secret` (and copy it, it will disappear !) :
-
 ![5](https://user-images.githubusercontent.com/52013479/151680023-a243939d-b208-4a25-a256-a4bc49092a95.png)
-
 7. Keep your `client id` and `client secret`, they will be needed in the steps [below](#installation).
 
 ## Installation
@@ -65,7 +55,7 @@ You can now use the macro to create notes with videogame information in your vau
 
 ## Template variables definitions
 
-Please find here a definition of the possible variables to be used in your template. Simply write `{{VALUE:name}}` in your template, and replace `name` by the desired video game data, including :
+Please find here a definition of the possible variables to be used in your template. Simply write `{{VALUE:<variable name>}}` in your template, and replace `<variable name>` by the desired video game data.
 
 | Variable | Description |
 |:--------:|:------------|
@@ -81,4 +71,11 @@ Please find here a definition of the possible variables to be used in your templ
 | `storyline` | A short description of a games story |
 | `platforms` | A list of platforms this game was released on, formatted as "platform1", "platform2" etc. |
 | `platformAbbreviations` | A list of platform name abbreviations from `platforms` variable. |
+| `ESRB` | Entertainment Software Rating Board rating (United States) |
+| `PEGI` | Pan-European Game Information rating (European Union) |
+| `CERO` | Computer Entertainment Rating Organization rating |
+| `USK` | Unterhaltungssoftware Selbstkontrolle rating |
+| `GRAC` | Game Rating and Administration Committee rating (Japan) |
+| `CLASS_IND` | Classificação Indicativa rating (Brazil) |
+| `ACB` | Australian Classification Board rating (Australia) |
 | `status` | Game completion status: todo, wip (work in progress) or done. |

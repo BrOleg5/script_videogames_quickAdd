@@ -48,7 +48,7 @@ async function start(params, settings) {
 	await readAuthToken();
 
 	const query = await QuickAdd.quickAddApi.inputPrompt(
-		"Enter videogame title: "
+		"Enter videogame title: ", "The Darkness"
 	);
 	if (!query) {
 		notice("No query entered.");
@@ -71,6 +71,8 @@ async function start(params, settings) {
 		var developers = (selectedGame.involved_companies).filter(element => element.developer);
 		var publishers = (selectedGame.involved_companies).filter(element => element.publisher);
 	}
+
+	const rating_dict = processAgeRating(selectedGame.age_ratings);
 
 	const STATUS_ARR = ["todo", "done", "wip"];
 	const myStatus = await QuickAdd.quickAddApi.suggester(
@@ -111,7 +113,14 @@ async function start(params, settings) {
 			.map(item => item.name)) : ""}`,
 		platformAbbreviations: `${selectedGame.platforms ? formatList((selectedGame.platforms)
 			.map(item => item.abbreviation)) : ""}`,
-		url: selectedGame.url, 
+		url: selectedGame.url,
+		ESRB: `${"ESRB" in rating_dict ? rating_dict["ESRB"] : ""}`,
+		PEGI: `${"PEGI" in rating_dict ? rating_dict["PEGI"] : ""}`,
+		CERO: `${"CERO" in rating_dict ? rating_dict["CERO"] : ""}`,
+		USK: `${"USK" in rating_dict ? rating_dict["USK"] : ""}`,
+		GRAC: `${"GRAC" in rating_dict ? rating_dict["GRAC"] : ""}`,
+		CLASS_IND: `${"CLASS_IND" in rating_dict ? rating_dict["CLASS_IND"] : ""}`,
+		ACB: `${"ACB" in rating_dict ? rating_dict["ACB"] : ""}`,
 		status: myStatus
 	};
 }
@@ -222,7 +231,8 @@ async function apiGet(query) {
 			body: "fields name, first_release_date, involved_companies.developer, " +
 				"involved_companies.publisher, involved_companies.company.name, " +
 				"url, cover.url, genres.name, " +
-				"game_modes.name, storyline, platforms.name, platforms.abbreviation; " +
+				"game_modes.name, storyline, platforms.name, platforms.abbreviation, " +
+				"age_ratings.category, age_ratings.rating; " + 
 				"search \"" + query + "\"; limit 25;"
 		})
 		
@@ -231,4 +241,16 @@ async function apiGet(query) {
 		await refreshAuthToken();
 		return await getByQuery(query);
 	}
+}
+
+function processAgeRating(age_ratings) {
+	const category = ["ESRB", "PEGI", "CERO", "USK", "GRAC", "CLASS_IND", "ACB"];
+	const rating = ["3", "7", "12", "16", "18", "RP", "EC", "E", "E10", "T", "M", "AO", "A",
+		"B", "C", "D", "Z", "0", "6", "12", "16", "18", "ALL", "12", "15", "18", "TESTING",
+		"L", "10", "12", "14", "16", "18", "G", "PG", "M", "MA15+", "R18+", "RC"];
+	var rating_dict = {};
+	for(let i = 0; i < age_ratings.length; i++) {
+		rating_dict[category[age_ratings[i].category-1]] = rating[age_ratings[i].rating-1];
+	}
+	return rating_dict;
 }
