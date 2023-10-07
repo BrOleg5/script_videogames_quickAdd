@@ -91,36 +91,36 @@ async function start(params, settings) {
 		// POST request to IGDB in apiGet(query) uses IGDB API's expander syntax
 		// (see : https://api-docs.igdb.com/#expander)
 		genres: `${selectedGame.genres ? formatList((selectedGame.genres)
-			.map(item => item.name)) : ""}`,
+			.map(item => item.name)) : " "}`,
 		gameModes: `${selectedGame.game_modes ? formatList((selectedGame.game_modes)
-			.map(item => item.name)) : ""}`,
+			.map(item => item.name)) : " "}`,
 		// Developer and publisher names
 		developerName: `${developers ? formatList(developers
-			.map(developer => developer.company.name)) : ""}`,
+			.map(developer => developer.company.name)) : " "}`,
 		publisherName: `${publishers ? formatList(publishers
-			.map(publisher => publisher.company.name)) : ""}`,
+			.map(publisher => publisher.company.name)) : " "}`,
 		// For possible image size options, see : https://api-docs.igdb.com/#images
 		cover: `${selectedGame.cover ? "https:" + (selectedGame.cover.url)
-			.replace("thumb", "cover_big") : ""}`,
+			.replace("thumb", "cover_big") : " "}`,
 		// Release date is given as UNIX timestamp.
 		release: `${selectedGame.first_release_date ?
-			(new Date((selectedGame.first_release_date*1000))).getFullYear() : ""}`,
+			(new Date((selectedGame.first_release_date*1000))).getFullYear() : " "}`,
 		// A short description of the game.
 		storyline: `${selectedGame.storyline ?
-			(selectedGame.storyline).replace(/\r?\n|\r/g, " ") : ""}`,
+			(selectedGame.storyline).replace(/\r?\n|\r/g, " ") : " "}`,
 		// Platforms
 		platforms: `${selectedGame.platforms ? formatList((selectedGame.platforms)
 			.map(item => item.name)) : ""}`,
 		platformAbbreviations: `${selectedGame.platforms ? formatList((selectedGame.platforms)
 			.map(item => item.abbreviation)) : ""}`,
 		url: selectedGame.url,
-		ESRB: `${"ESRB" in rating_dict ? rating_dict["ESRB"] : ""}`,
-		PEGI: `${"PEGI" in rating_dict ? rating_dict["PEGI"] : ""}`,
-		CERO: `${"CERO" in rating_dict ? rating_dict["CERO"] : ""}`,
-		USK: `${"USK" in rating_dict ? rating_dict["USK"] : ""}`,
-		GRAC: `${"GRAC" in rating_dict ? rating_dict["GRAC"] : ""}`,
-		CLASS_IND: `${"CLASS_IND" in rating_dict ? rating_dict["CLASS_IND"] : ""}`,
-		ACB: `${"ACB" in rating_dict ? rating_dict["ACB"] : ""}`,
+		ESRB: `${"ESRB" in rating_dict ? rating_dict["ESRB"] : " "}`,
+		PEGI: `${"PEGI" in rating_dict ? rating_dict["PEGI"] : " "}`,
+		CERO: `${"CERO" in rating_dict ? rating_dict["CERO"] : " "}`,
+		USK: `${"USK" in rating_dict ? rating_dict["USK"] : " "}`,
+		GRAC: `${"GRAC" in rating_dict ? rating_dict["GRAC"] : " "}`,
+		CLASS_IND: `${"CLASS_IND" in rating_dict ? rating_dict["CLASS_IND"] : " "}`,
+		ACB: `${"ACB" in rating_dict ? rating_dict["ACB"] : " "}`,
 		status: myStatus
 	};
 }
@@ -247,7 +247,7 @@ function processAgeRating(age_ratings) {
 	const category = ["ESRB", "PEGI", "CERO", "USK", "GRAC", "CLASS_IND", "ACB"];
 	const rating = ["3", "7", "12", "16", "18", "RP", "EC", "E", "E10", "T", "M", "AO", "A",
 		"B", "C", "D", "Z", "0", "6", "12", "16", "18", "ALL", "12", "15", "18", "TESTING",
-		"L", "10", "12", "14", "16", "18", "G", "PG", "M", "MA15+", "R18+", "RC"];
+		"L", "10", "12", "14", "16", "18", "G", "PG", "M", "MA 15+", "R 18+", "RC"];
 	var rating_dict = {};
 	for(let i = 0; i < age_ratings.length; i++) {
 		rating_dict[category[age_ratings[i].category-1]] = rating[age_ratings[i].rating-1];
