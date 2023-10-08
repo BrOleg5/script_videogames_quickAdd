@@ -77,6 +77,11 @@ async function start(params, settings) {
 		rating_dict = processAgeRating(selectedGame.age_ratings);
 	}
 
+	let category;
+	if(selectedGame.category) {
+		category = processCategory(selectedGame.category);
+	}
+
 	const STATUS_ARR = ["todo", "done", "wip"];
 	const myStatus = await QuickAdd.quickAddApi.suggester(
 		STATUS_ARR,
@@ -97,9 +102,9 @@ async function start(params, settings) {
 		gameModes: selectedGame.game_modes ? formatList((selectedGame.game_modes)
 			.map(item => item.name)) : " ",
 		// Developer and publisher names
-		developerName: developers ? formatList(developers
+		developer: developers ? formatList(developers
 			.map(developer => developer.company.name)) : " ",
-		publisherName: publishers ? formatList(publishers
+		publisher: publishers ? formatList(publishers
 			.map(publisher => publisher.company.name)) : " ",
 		// For possible image size options, see : https://api-docs.igdb.com/#images
 		cover: selectedGame.cover ? "https:" + (selectedGame.cover.url)
@@ -114,7 +119,9 @@ async function start(params, settings) {
 			.map(item => item.name)) : " ",
 		platformAbbreviations: selectedGame.platforms ? formatList((selectedGame.platforms)
 			.map(item => item.abbreviation)) : " ",
+		series: selectedGame.collection ? selectedGame.collection.name : " ",
 		url: selectedGame.url,
+		category: selectedGame.category ? category : " ",
 		ESRB: "ESRB" in rating_dict ? rating_dict["ESRB"] : " ",
 		PEGI: "PEGI" in rating_dict ? rating_dict["PEGI"] : " ",
 		CERO: "CERO" in rating_dict ? rating_dict["CERO"] : " ",
@@ -237,7 +244,7 @@ async function apiGet(query) {
 				"involved_companies.publisher, involved_companies.company.name, " +
 				"url, cover.url, genres.name, game_modes.name, storyline, platforms.name, " +
 				"platforms.abbreviation, age_ratings.category, age_ratings.rating, " +
-				"aggregated_rating, aggregated_rating_count; " +
+				"aggregated_rating, aggregated_rating_count, category, collection.name; " +
 				"search \"" + query + "\"; limit 25;"
 		})
 		
@@ -258,4 +265,11 @@ function processAgeRating(age_ratings) {
 		rating_dict[category[age_ratings[i].category-1]] = rating[age_ratings[i].rating-1];
 	}
 	return rating_dict;
+}
+
+function processCategory(category_value) {
+	const category = ["Main game", "DLC or addon", "Expansion", "Bundle", "Standalone expansion",
+		"Mod", "Episode", "Season", "Remake", "Remaster", "Expanded game", "Port", "Fork", "Pack",
+		"Update"];
+	return category[category_value-1];
 }

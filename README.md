@@ -71,6 +71,8 @@ Please find here a definition of the possible variables to be used in your templ
 | `storyline` | A short description of a games story |
 | `platforms` | A list of platforms this game was released on, formatted as "platform1", "platform2" etc. |
 | `platformAbbreviations` | A list of platform name abbreviations from `platforms` variable. |
+| `series` | The series the game belongs to. |
+| `category` | The category of this game. E.g. main game, DLC, mod, remake, remaster, port, bundle etc. |
 | `aggregatedRating` | Rating based on external critic scores |
 | `aggregatedRatingCount` | Number of external critic scores |
 | **Age ratings** ||
