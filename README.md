@@ -75,6 +75,9 @@ Please find here a definition of the possible variables to be used in your templ
 | `category` | The category of this game. E.g. main game, DLC, mod, remake, remaster, port, bundle etc. |
 | `aggregatedRating` | Rating based on external critic scores |
 | `aggregatedRatingCount` | Number of external critic scores |
+| `dlcs` | DLCs for this game. |
+| `expandedGames` | Expanded games of this game. |
+| `expansions` | Expansions of this game. |
 | **Age ratings** ||
 | `ESRB` | Entertainment Software Rating Board rating (United States) |
 | `PEGI` | Pan-European Game Information rating (European Union) |

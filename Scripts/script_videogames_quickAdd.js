@@ -98,9 +98,8 @@ async function start(params, settings) {
 		// Each genre comes in {ID, NAME} pair. Here, get rid of ID to keep NAME only.
 		// POST request to IGDB in apiGet(query) uses IGDB API's expander syntax
 		// (see : https://api-docs.igdb.com/#expander)
-		genres: selectedGame.genres ? formatList((selectedGame.genres).map(item => item.name)) : " ",
-		gameModes: selectedGame.game_modes ? formatList((selectedGame.game_modes)
-			.map(item => item.name)) : " ",
+		genres: formatNameList(selectedGame.genres),
+		gameModes: formatNameList(selectedGame.game_modes),
 		// Developer and publisher names
 		developer: developers ? formatList(developers
 			.map(developer => developer.company.name)) : " ",
@@ -115,20 +114,22 @@ async function start(params, settings) {
 		// A short description of the game.
 		storyline: selectedGame.storyline ? (selectedGame.storyline).replace(/\r?\n|\r/g, " ") : " ",
 		// Platforms
-		platforms: selectedGame.platforms ? formatList((selectedGame.platforms)
-			.map(item => item.name)) : " ",
+		platforms: formatNameList(selectedGame.platforms),
 		platformAbbreviations: selectedGame.platforms ? formatList((selectedGame.platforms)
 			.map(item => item.abbreviation)) : " ",
 		series: selectedGame.collection ? selectedGame.collection.name : " ",
 		url: selectedGame.url,
 		category: selectedGame.category ? category : " ",
-		ESRB: "ESRB" in rating_dict ? rating_dict["ESRB"] : " ",
-		PEGI: "PEGI" in rating_dict ? rating_dict["PEGI"] : " ",
-		CERO: "CERO" in rating_dict ? rating_dict["CERO"] : " ",
-		USK: "USK" in rating_dict ? rating_dict["USK"] : " ",
-		GRAC: "GRAC" in rating_dict ? rating_dict["GRAC"] : " ",
-		CLASS_IND: "CLASS_IND" in rating_dict ? rating_dict["CLASS_IND"] : " ",
-		ACB: "ACB" in rating_dict ? rating_dict["ACB"] : " ",
+		dlcs: formatNameList(selectedGame.dlcs),
+		expandedGames: formatNameList(selectedGame.expanded_games),
+		expansions: formatNameList(selectedGame.expansions),
+		ESRB: getDictElementWithCheck(rating_dict, "ESRB"),
+		PEGI: getDictElementWithCheck(rating_dict, "PEGI"),
+		CERO: getDictElementWithCheck(rating_dict, "CERO"),
+		USK: getDictElementWithCheck(rating_dict, "USK"),
+		GRAC: getDictElementWithCheck(rating_dict, "GRAC"),
+		CLASS_IND: getDictElementWithCheck(rating_dict, "CLASS_IND"),
+		ACB: getDictElementWithCheck(rating_dict, "ACB"),
 		aggregatedRating: selectedGame.aggregated_rating ? 
 			selectedGame.aggregated_rating.toFixed().toString() : " ",
 		aggregatedRatingCount: selectedGame.aggregated_rating_count ?
@@ -244,7 +245,9 @@ async function apiGet(query) {
 				"involved_companies.publisher, involved_companies.company.name, " +
 				"url, cover.url, genres.name, game_modes.name, storyline, platforms.name, " +
 				"platforms.abbreviation, age_ratings.category, age_ratings.rating, " +
-				"aggregated_rating, aggregated_rating_count, category, collection.name; " +
+				"aggregated_rating, aggregated_rating_count, category, collection.name, " +
+				"dlcs.name, expanded_games.name, expansions.name, external_games.category, " +
+				"external_games.url; " +
 				"search \"" + query + "\"; limit 25;"
 		})
 		
@@ -255,6 +258,7 @@ async function apiGet(query) {
 	}
 }
 
+// TODO: replace arrays with dictionary
 function processAgeRating(age_ratings) {
 	const category = ["ESRB", "PEGI", "CERO", "USK", "GRAC", "CLASS_IND", "ACB"];
 	const rating = ["3", "7", "12", "16", "18", "RP", "EC", "E", "E10", "T", "M", "AO", "A",
@@ -267,9 +271,18 @@ function processAgeRating(age_ratings) {
 	return rating_dict;
 }
 
+// TODO: replace arrays with dictionary
 function processCategory(category_value) {
 	const category = ["Main game", "DLC or addon", "Expansion", "Bundle", "Standalone expansion",
 		"Mod", "Episode", "Season", "Remake", "Remaster", "Expanded game", "Port", "Fork", "Pack",
 		"Update"];
 	return category[category_value-1];
+}
+
+function formatNameList(object) {
+	return object ? formatList((object).map(item => item.name)) : " ";
+}
+
+function getDictElementWithCheck(dict, key) {
+	return (key in dict) ? dict[key] : " ";
 }
